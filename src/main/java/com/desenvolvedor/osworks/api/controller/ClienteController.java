@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.desenvolvedor.osworks.api.domain.model.Cliente;
 import com.desenvolvedor.osworks.api.domain.repository.ClienteRepository;
+import com.desenvolvedor.osworks.api.domain.service.CadastroClienteService;
 
 
 @RestController
@@ -34,6 +35,9 @@ public class ClienteController {
 	
 	@Autowired // Vai instancia(Vai ser vira) a Interface Clienterepository para esse class de controle
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private CadastroClienteService cadastroCliente;
 	
 	@GetMapping
 	public List<Cliente> Listar() {
@@ -63,7 +67,7 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED) // CREATED retorna o status 201 de criado 
 	public Cliente adcionar(@Valid @RequestBody Cliente cliente) {
-		return clienteRepository.save(cliente);
+		return cadastroCliente.salvar(cliente);
 	} 	
 	
 	@PutMapping("/{clienteId}")
@@ -74,8 +78,8 @@ public class ClienteController {
 		}
 		
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
-		
+		cliente = cadastroCliente.salvar(cliente);
+			
 		return ResponseEntity.ok(cliente);
 	}
 	
@@ -85,7 +89,7 @@ public class ClienteController {
 			return ResponseEntity.notFound().build();
 		}
 		
-		clienteRepository.deleteById(clienteId);
+		cadastroCliente.excluir(clienteId);
 		
 		return ResponseEntity.noContent().build();
 	}

@@ -18,6 +18,7 @@ public class CadastroClienteService {
 	public Cliente salvar(Cliente cliente) {
 		Cliente clienteExistente = clienteRepository.findByEmail(cliente.getEmail());
 		
+		// Verifica se o emial ja esta sendo usado por outro cliente
 		if (clienteExistente != null && !clienteExistente.equals(cliente)) {
 			throw new NegocioException("Ja existe esse email cadastrado com este e-mail");
 		}

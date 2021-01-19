@@ -13,9 +13,9 @@ import javax.validation.constraints.Size;
 import com.desenvolvedor.osworks.api.domain.ValidationGroups;
 
 @Entity
-public class Cliente {
-
-	@NotNull(groups = ValidationGroups.ClienteId.class)
+public class Cliente { 
+	
+	//@NotNull(groups = ValidationGroups.ClienteId.class) // Passa o ID para validar o ID ao inserir ordem de serviço 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

@@ -25,9 +25,9 @@ import com.desenvolvedor.osworks.api.domain.model.Cliente;
 import com.desenvolvedor.osworks.api.domain.repository.ClienteRepository;
 import com.desenvolvedor.osworks.api.domain.service.CadastroClienteService;
 
-
+	
 @RestController
-@RequestMapping("/clientes")     // Controlado para responde tudo que esta em /clientes, para não ser necessario fica repetido no GetMapping o ("/cliente")
+@RequestMapping("/clientes") // Controlado para responde tudo que esta em /clientes, para não ser necessario fica repetido no GetMapping o ("/cliente")
 public class ClienteController {
 	
 //	@PersistenceContext
@@ -61,7 +61,6 @@ public class ClienteController {
 			return ResponseEntity.ok(cliente.get()); // Retorna o Status 200 - ok
 		}
 		return ResponseEntity.notFound().build(); // Retorna o Status 404 - not found
-	
 	}
 	
 	@PostMapping

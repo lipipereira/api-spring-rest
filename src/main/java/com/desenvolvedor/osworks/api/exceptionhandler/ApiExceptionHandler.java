@@ -1,6 +1,7 @@
 package com.desenvolvedor.osworks.api.exceptionhandler;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.desenvolvedor.osworks.api.domain.exception.EntidadeNaoEncontradaException;
 import com.desenvolvedor.osworks.api.domain.exception.NegocioException;
 
 @ControllerAdvice
@@ -32,10 +34,23 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		problema.setStatus(status.value());
 		problema.setTitulo(ex.getMessage());
-		problema.setDataHora(LocalDateTime.now());
+		problema.setDataHora(OffsetDateTime.now());
 		
 		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);	
 	}
+
+	@ExceptionHandler(EntidadeNaoEncontradaException.class)
+	public ResponseEntity<Object> handleEntidadeNaoEncontrada(NegocioException ex, WebRequest request) {
+		var status = HttpStatus.NOT_FOUND;
+		var problema = new Problema();
+		
+		problema.setStatus(status.value());
+		problema.setTitulo(ex.getMessage());
+		problema.setDataHora(OffsetDateTime.now());
+		
+		return handleExceptionInternal(ex, problema, new HttpHeaders(), status, request);	
+	}
+	
 	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
@@ -52,8 +67,8 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		var problema = new Problema();
 		problema.setStatus(status.value());
-		problema.setTitulo("Um ou mis campos estão invalidos");
-		problema.setDataHora(LocalDateTime.now());
+		problema.setTitulo("Um ou mais campos estão invalidos");
+		problema.setDataHora(OffsetDateTime.now());
 		problema.setCampos(campos);
 		
 		

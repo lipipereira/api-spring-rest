@@ -21,7 +21,7 @@ public class CadastroClienteService {
 		// Verifica se o emial ja esta sendo usado por outro cliente
 		if (clienteExistente != null && !clienteExistente.equals(cliente)) {
 			throw new NegocioException("Ja existe esse email cadastrado com este e-mail");
-		}
+		}	
 		
 		return clienteRepository.save(cliente);	
 	}

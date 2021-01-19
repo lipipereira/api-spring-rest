@@ -2,6 +2,9 @@ package com.desenvolvedor.osworks.api.domain.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -18,6 +22,7 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
 import com.desenvolvedor.osworks.api.domain.ValidationGroups;
+import com.desenvolvedor.osworks.api.model.Comentario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
@@ -29,28 +34,39 @@ public class OrdemServico {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Valid
-	@ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class)
-	@NotNull
+	// Ja esta validando o na api e no domain, se esta validado pela API não precisa duplica a validação
+	// Se não pode deixa as validações no dois lugares
+	//@Valid 
+	// Para ao validar Cliente ele validar somente as anotações que usar essa ValidationGrupos no caso somente o ID do Cliente
+	//@ConvertGroup(from = Default.class, to = ValidationGroups.ClienteId.class) 
+	//@NotNull
 	@ManyToOne // Muitos para um. Relacionamente de tabelas (Muitas ordem serviço para um)
 	//@JoinColumn(name = "id_cliente")  - Especifica a coluna para uma forengKey
 	private Cliente cliente;
 	
-	@NotBlank
+	//@NotBlank
 	private String descricao;
 	
-	@NotNull
+	//@NotNull
 	private BigDecimal preco;
 	
-	@JsonProperty(access = Access.READ_ONLY) 	
+	// Anotação para pertimir somente leitura pelo cliente
+	//@JsonProperty(access = Access.READ_ONLY) 	
 	@Enumerated(EnumType.STRING) // Especifica o que vai ser salvo no banco do ENUM
 	private StatusOrdemServico 	status;
 	
-	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime dataAbertura;
+	// Anotação para pertimir somente leitura pelo cliente
+	//@JsonProperty(access = Access.READ_ONLY)
+	private OffsetDateTime dataAbertura;
 	
-	@JsonProperty(access = Access.READ_ONLY)
-	private LocalDateTime dataFinalizacao;
+	// Anotação para pertimir somente leitura pelo cliente
+	//@JsonProperty(access = Access.READ_ONLY)
+	private OffsetDateTime dataFinalizacao;
+	
+	// Mapeamnete para uma ordem serviço pode ter varios comentarios
+	@OneToMany(mappedBy = "ordemServico")
+	private List<Comentario> comentarios = new ArrayList<>();
+	
 	public Long getId() {
 		return id;
 	}
@@ -81,17 +97,23 @@ public class OrdemServico {
 	public void setStatus(StatusOrdemServico status) {
 		this.status = status;
 	}
-	public LocalDateTime getDataAbertura() {
+	public OffsetDateTime getDataAbertura() {
 		return dataAbertura;
 	}
-	public void setDataAbertura(LocalDateTime dataAbertura) {
+	public void setDataAbertura(OffsetDateTime dataAbertura) {
 		this.dataAbertura = dataAbertura;
 	}
-	public LocalDateTime getDataFinalizacao() {
+	public OffsetDateTime getDataFinalizacao() {
 		return dataFinalizacao;
 	}
-	public void setDataFinalizacao(LocalDateTime dataFinalizacao) {
+	public void setDataFinalizacao(OffsetDateTime dataFinalizacao) {
 		this.dataFinalizacao = dataFinalizacao;
+	}
+	public List<Comentario> getComentarios() {
+		return comentarios;
+	}
+	public void setComentarios(List<Comentario> comentarios) {
+		this.comentarios = comentarios;
 	}
 	@Override
 	public int hashCode() {
